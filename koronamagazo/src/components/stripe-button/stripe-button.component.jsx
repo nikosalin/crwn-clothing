@@ -1,14 +1,20 @@
 import React from 'react';
 import StripeCheckout from 'react-stripe-checkout';
+import firebase from 'firebase';
+import { getItems, getFavourites, updateFavourites } from '../../firebase/firebase.utils';
 
-const StripeCheckoutButton = ({ price }) => {
+const StripeCheckoutButton = ({ price, items }) => {
     const priceForStripe = price * 100;  //px timi 25..25 * 100 gia na ginoun sents
     const publishableKey = 'pk_test_51Ij4bRGPm29AFXoj5PUwGrIdY4rJKVjrJn0CAKP0U7JaIwDjYJA2mpvmhZbyKr46mCGLxx8F8d9Noar3XjdfbSN400nHxBEGQX';
 
     //kanonika pername sto back to token gia na kanei thn xrewsh alla pros to parwn den to kanw
-    const onToken = token => {
+    const onToken = async (token) => {
         console.log(token);
         alert('Payment succesful');
+        console.log('items:', items);
+        await getItems()
+        await getFavourites()
+        await updateFavourites(items);
     }
 
 

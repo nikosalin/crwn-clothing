@@ -10,7 +10,14 @@ import { selectCartItems, selectCartTotal } from '../../redux/cart/cart.selector
 
 import './checkout.styles.scss';
 
-const CheckoutPgae = ({cartItems, total}) => (
+
+const CheckoutPgae = ({cartItems, total}) => {
+
+    const addToRecomended = () => {
+        console.log('ton pairnoume', cartItems);
+    }
+
+    return(
     <div className='checkout-page'>
         <div className='checkout-header'>
             <div className='heade-block'>
@@ -41,9 +48,10 @@ const CheckoutPgae = ({cartItems, total}) => (
             <br />
             4242 4242 4242 4242 - 01/21 - 123
         </div>
-        <StripeCheckoutButton price={total} />
+        <StripeCheckoutButton items={cartItems} price={total} />
     </div>
-);
+    )
+};
 
 const mapStateToProps = createStructuredSelector({
     cartItems: selectCartItems,
