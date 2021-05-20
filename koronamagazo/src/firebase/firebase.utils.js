@@ -26,15 +26,19 @@ console.log(res);
 
 export const updateFavourites = async (incomingitems) => { 
   //const favref = firebase.firestore().collection("favourites").doc("yQ0DSFvUuJYbN8EZuBjp")
-  await Promise.all(incomingitems.map(item => firebase.firestore().collection("favourites").doc('yQ0DSFvUuJYbN8EZuBjp')
+  await  firebase.firestore().collection("favourites").doc('yQ0DSFvUuJYbN8EZuBjp')
  .get().then((doc) => {
    console.log(doc);
    if (doc.exists){
      // Convert to City object     .where('name', '==', item.name)
      var favourite = doc.data();
-     favourite.items.forEach((e, i) => {if(item.id === e.id){
-      e.totalsale=e.totalsale + item.quantity;
+     incomingitems.forEach(item => {
+            favourite.items.forEach((e, i) => {if(item.id === e.id){
+       console.log('quantity:', item.quantity);
+        e.totalsale=e.totalsale + item.quantity;
       }})
+     } )
+      console.log('pre-call', favourite);
       firebase.firestore().collection('favourites').doc('yQ0DSFvUuJYbN8EZuBjp').set(favourite,
       { merge: true })
       console.log('success', favourite)
@@ -43,7 +47,7 @@ export const updateFavourites = async (incomingitems) => {
      console.log("No such document!");
    }}).catch((error) => {
      console.log("Error getting document:", error);
-   }) ) ) } 
+   }) } 
 
 
 export const getItems = async () => {
@@ -53,11 +57,25 @@ export const getItems = async () => {
 // console.error(error);
 // });
 
-const snapshot = await firebase.firestore().collection('collections').get()
-const res = snapshot.docs.map(doc => doc.data());
-console.log(res);
-    return res;
-}
+await firebase.firestore().collection("favourites").doc('yQ0DSFvUuJYbN8EZuBjp').get().then((doc) => {
+  
+    var favourite = doc.data();
+    let top5 = [];
+    for(let i=0; i<=4; i++) {
+      const max = favourite.reduce(function(prev, current) {
+        return (prev.totalsale > current.totalsale) ? prev : current
+      })
+      const rec = favourite.sort(function(prev, current) {
+        return (prev.totalsale > current.totalsale) ? prev : current
+      })
+      console.log('reccomended:', rec);
+    }
+  }).catch((error) => {
+    console.log("Error getting document:", error);
+  })
+} 
+
+
 
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
