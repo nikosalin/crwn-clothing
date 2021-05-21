@@ -6,6 +6,7 @@ import userReducer from './user/user.reducer';
 import cartReducer from './cart/card.reducer';
 import directoryReducer from './directory/directory.reducer';
 import shopReducer from './shop/shop.reducer';
+import favouriteReducer from './favourites/favourite.reducer'
 
 const persistConfig = {
     key: 'root',    //apo poio shmeio tou reducer bject na ksekina to store(apothikeush)
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     user: userReducer,
     cart: cartReducer,
     directory: directoryReducer,
-    shop: shopReducer
+    shop: shopReducer,
+    favourites: favouriteReducer
 }); 
 
 export default persistReducer(persistConfig, rootReducer);
