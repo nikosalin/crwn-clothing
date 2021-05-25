@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import { collection, query, where } from "firebase/firestore";
+import { getStoredState } from 'redux-persist';
 
 
 const config = {
@@ -51,25 +52,20 @@ export const updateFavourites = async (incomingitems) => {
 
 
 export const getItems = async () => {
-//   const dbRef = firestore.collection('collections');
-//     await dbRef.get().then(res => console.log('res', res))
-// .catch((error) => {
-// console.error(error);
-// });
-
 await firebase.firestore().collection("favourites").doc('yQ0DSFvUuJYbN8EZuBjp').get().then((doc) => {
   
     var favourite = doc.data();
+
     let top5 = [];
+    const top = favourite.items.sort(function(a, b) {
+      return a.totalsale - b.totalsale;
+  });
+
     for(let i=0; i<=4; i++) {
-      const max = favourite.reduce(function(prev, current) {
-        return (prev.totalsale > current.totalsale) ? prev : current
-      })
-      const rec = favourite.sort(function(prev, current) {
-        return (prev.totalsale > current.totalsale) ? prev : current
-      })
-      console.log('reccomended:', rec);
+     top5[i] = top[top.length - i -1]
     }
+
+    return top5;
   }).catch((error) => {
     console.log("Error getting document:", error);
   })

@@ -31,7 +31,7 @@ const Header = ({currentUser, hidden}) => (
                 SHOP
             </OptionLink>
             <OptionLink to='/favourites'>
-                RECOMENDED
+                RECOMMENDED
             </OptionLink>
             { currentUser ? (
              <OptionLink as='div' onClick={() => auth.signOut()}>
