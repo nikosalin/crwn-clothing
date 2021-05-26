@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { connect } from 'react-redux';
 
 import CustomButton from '../../components/custom-button/custom-button.component';
 
