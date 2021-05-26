@@ -1,44 +1,43 @@
-import React from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getFavs} from '../../redux/favourites/favourite.action';
 import {getItems} from "../../firebase/firebase.utils"
+import React, { useState, useEffect } from "react"
+import "./favourites.styles.scss";
+import firebase from "../../firebase/firebase.utils"
+import FavouriteItem from "./FavouriteItem";
 
-class FavouritesPage extends React.Component {
-    state = {
-        loading: true
-    };
-    // const { items } = favourites;
-    async componentDidMount() {
-        const {getFavs} = this.props;
-        const favs = await getItems();
-
-        const newFav = await getFavs(favs);
-        // userRef.onSnapshot(snapShot => {
-        //   setCurrentUser({
-        //       id: snapShot.id,
-        //       ...snapShot.data()
-        //     });
-        // });        // console.log("ref",favs);
-        // const {getItems} = this.props;
-    }
-
-    render() {
+function useLists() {
+    const [lists, setLists] = useState([])
+    useEffect(() => {
+        firebase.firestore().collection("favourites").doc('yQ0DSFvUuJYbN8EZuBjp').get().then((doc) => {
+  
+            var favourite = doc.data();
         
-        //  console.log("favs",getItems);
-        return (
-        <div className='favourites-page'>
-            <h2 className='title'> FAVOURITES </h2>
-            <div className='items'>
-                {
-                  //  items.map(item => (<CollectionItem key={item.id} item={item} />))
-                }
-            </div>
-        </div>
-        );}
-    }
-
-const mapDispatchToProps = dispatch => ({
-    getFavs: favs => dispatch(getFavs(favs))});
-
-export default connect(null, mapDispatchToProps)(FavouritesPage);
+            let top5 = [];
+            const top = favourite.items.sort(function(a, b) {
+              return a.totalsale - b.totalsale;
+          });
+        
+            for(let i=0; i<=4; i++) {
+             top5[i] = top[top.length - i -1]
+            }
+            setLists(top5);
+          }).catch((error) => {
+            console.log("Error getting document:", error);
+          })
+    }, [])
+    return lists
+  }
+  const FavouritesPage = () => {
+    const lists = useLists()
+    return (
+        <div className='favourites-overview'>
+        {lists.map(({id, ...otherProps}) =>(
+           <FavouriteItem key={id} {...otherProps} />
+        ))
+         } 
+         </div>)
+  }  
+  
+  export default FavouritesPage;
