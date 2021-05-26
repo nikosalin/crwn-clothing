@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { getFavs} from '../../redux/favourites/favourite.action';
 import {getItems} from "../../firebase/firebase.utils"
 import React, { useState, useEffect } from "react"
-import styled from "styled-components"
+import "./favourites.styles.scss";
 import firebase from "../../firebase/firebase.utils"
-
+import FavouriteItem from "./FavouriteItem";
 
 function useLists() {
     const [lists, setLists] = useState([])
@@ -31,17 +31,13 @@ function useLists() {
   }
   const FavouritesPage = () => {
     const lists = useLists()
-    const handleOnDelete = id => {
-      firebase
-        .firestore()
-        .collection("notes")
-        .doc(id)
-        .delete()
-    }
     return (
-      <div>
-        {JSON.stringify(lists)}
-      </div>
-    )
-  }
+        <div className='favourites-overview'>
+        {lists.map(({id, ...otherProps}) =>(
+           <FavouriteItem key={id} {...otherProps} />
+        ))
+         } 
+         </div>)
+  }  
+  
   export default FavouritesPage;
